@@ -4,7 +4,8 @@ window.addEventListener("keydown", checkKey);
 
 function checkKey(ev){     if(ev.keyCode === 13)    
     {       
-      saveNewTask();    }     }    const mySaveButton = document.getElementById("saveNewTask");
+      saveNewTask();    }     }    
+      const mySaveButton = document.getElementById("saveNewTask");
 
 // lägg till klick på save-knappen
 mySaveButton.addEventListener("click",saveNewTask);  
@@ -13,11 +14,16 @@ function saveNewTask(){
     //Hämta textrutans innehåll
     const text = document.getElementById("newTask"); 
     
+    if(text.value.trim().length > 0)
+    {
+
     console.log(text.value); 
     
     //Skapa en ny div
     var divTask = document.createElement("div"); 
-    
+    divTask.className = "createdTask"
+
+
     //Lägg till lyssnare till vårt nya element 
     divTask.addEventListener("click",moveToNext);
     
@@ -37,16 +43,34 @@ function saveNewTask(){
    
     //Lägg till text-noden till din nyskapde div
     divTask.appendChild(theText); 
+
+    //Lägg till tillbaka-knapp
+    var backButton = document.createElement("button");
+    backButton.className = "backButton";
+    backButton.innerHTML = "&larr;";
+    backButton.addEventListener("click", moveBack);
+    divTask.appendChild(backButton);
+
+
     
+
+
+
+
+
+
     //Lägg till nya diven i föräldern till knappen du tryckte på
     firstKanban.appendChild(divTask); 
     
-    //Tömmer textruta
-    text.value= "";    
+ 
 
 
+    } //end if
 
-}
+        //Tömmer textruta
+        text.value= "";   
+        
+} //end function
 
 
 function moveToNext(){
@@ -57,8 +81,32 @@ const kanban = Array.from(document.getElementsByClassName("kanban"));
 
 //leta efter index för föräldern jag kom ifrån
 let currentParentIndex = kanban.indexOf(this.parentElement);
+
+
+console.log(currentParentIndex);
+
+if(currentParentIndex<kanban.length-1)
+{
 currentParentIndex = currentParentIndex +1;
 kanban[currentParentIndex].appendChild(this);
+}
+
+
+}
+
+function moveBack(ev){
+
+event.stopPropagation();
+   const clickedParent = this.parentElement;
+   const kanban = Array.from(document.getElementsByClassName("kanban"))
+   let currentParentIndex = kanban.indexOf(clickedParent.parentElement);
+
+   if(currentParentIndex > 0)
+   {
+currentParentIndex -= 1;
+kanban[currentParentIndex].appendChild(clickedParent);
+
+   }
 
 
 
